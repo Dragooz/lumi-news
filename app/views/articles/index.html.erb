@@ -1,0 +1,46 @@
+<div class="container mx-auto px-8 py-12">
+  <h1 class="text-4xl font-bold mb-12 text-center">Articles</h1>
+
+  <div class="mb-8">
+    <div class="flex flex-wrap gap-2 justify-end">
+      <%= link_to "All", articles_path, class: "px-4 py-2 rounded-full #{params[:language].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}" %>
+      <%= link_to "Malay", articles_path(language: "ms"), 
+          class: "px-4 py-2 rounded-full #{params[:language] == 'ms' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}" %>
+      <%= link_to "English", articles_path(language: "en"),
+          class: "px-4 py-2 rounded-full #{params[:language] == 'en' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+    <% @articles.each do |article| %>
+      <div class="border rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
+        <% if article.image_url.present? %>
+          <img src="<%= article.image_url %>" alt="<%= article.title %>" class="w-full h-56 object-cover">
+        <% else %>
+          <img src="https://placehold.co/600x400/e2e8f0/64748b?text=No+Image" alt="Placeholder" class="w-full h-56 object-cover">
+        <% end %>
+        
+        <div class="p-6">
+          <h2 class="text-2xl font-semibold mb-4">
+            <%= link_to article.title, article.original_url, target: "_blank", class: "hover:text-blue-600 transition duration-300" %>
+          </h2>
+          
+          <div class="text-base text-gray-600 space-y-2">
+            <p class="flex items-center">
+              <span class="font-medium mr-2">Publisher:</span>
+              <%= article.publisher.name %>
+            </p>
+            <p class="flex items-center">
+              <span class="font-medium mr-2">Language:</span>
+              <%= language_name(article.publisher.language) %>
+            </p>
+            <p class="flex items-center">
+              <span class="font-medium mr-2">Published:</span>
+              <%= article.published_at.strftime("%B %d, %Y") %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

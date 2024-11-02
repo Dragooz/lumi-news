@@ -39,6 +39,9 @@ gem 'nokogiri'  # For web scraping if needed
 gem 'httparty'  # For making HTTP requests
 gem 'sidekiq'   # For background jobs
 gem 'whenever'  # For cron jobs
+gem 'redis'     # For Redis for sidekiq
+
+
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
