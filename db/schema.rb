@@ -11,12 +11,15 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 2024_10_31_023013) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "articles", force: :cascade do |t|
     t.string "title", null: false
     t.datetime "published_at", null: false
     t.string "original_url", null: false
     t.string "image_url"
-    t.integer "publisher_id", null: false
+    t.bigint "publisher_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["original_url"], name: "index_articles_on_original_url", unique: true

@@ -51,9 +51,9 @@ class FeedParserService
     # puts "  Feed type: #{parsed_feed.class}"
 
     # puts "\nProcessing entries..."
-    # parsed_feed.entries.map.with_index do |entry, index|
-    #   puts "\nEntry #{index + 1} of #{parsed_feed.entries.count}:"
-    parsed_feed.entries.take(2).map.with_index do |entry, index|
+    parsed_feed.entries.map.with_index do |entry, index|
+      #   puts "\nEntry #{index + 1} of #{parsed_feed.entries.count}:"
+      # parsed_feed.entries.take(2).map.with_index do |entry, index|
       # puts "\nEntry #{index + 1} of 2:"
       extract_entry_data(entry)
     end
