@@ -5,20 +5,22 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+-   Configuration > https://www.ivanmorgillo.com/2024/06/20/get-started-with-ruby-on-rails-on-wsl2-ubuntu/
 
-* System dependencies
+-   Ruby version
 
-* Configuration
+-   System dependencies
 
-* Database creation
+-   Configuration
 
-* Database initialization
+-   Database creation
 
-* How to run the test suite
+-   Database initialization
 
-* Services (job queues, cache servers, search engines, etc.)
+-   How to run the test suite
 
-* Deployment instructions
+-   Services (job queues, cache servers, search engines, etc.)
 
-* ...
+-   Deployment instructions
+
+-   ...
