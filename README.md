@@ -28,4 +28,6 @@ Things you may want to cover:
 
 -   Deployment instructions
 
+-   Development: docker compose --env-file .env.development up
+-   Production: docker compose --env-file .env.production up
 -   ...

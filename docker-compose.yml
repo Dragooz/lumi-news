@@ -1,0 +1,107 @@
+version: "3.8"
+
+services:
+    redis:
+        image: redis:7-alpine
+        ports:
+            - "${REDIS_PORT:-6379}:6379"
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    db:
+        image: postgres:15-alpine
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+            - POSTGRES_DB=${POSTGRES_DB:-app_development}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: ${DOCKER_TARGET:-development}
+        environment:
+            - RAILS_ENV=${RAILS_ENV:-development}
+            - POSTGRES_HOST=db
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+            - POSTGRES_DB=${POSTGRES_DB:-app_development}
+            - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-app_development}
+            - REDIS_URL=redis://redis:6379/0
+            - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+            - RAILS_MAX_THREADS=${RAILS_MAX_THREADS:-5}
+            - RAILS_MIN_THREADS=${RAILS_MIN_THREADS:-1}
+        ports:
+            - "${PORT:-3000}:3000"
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        volumes:
+            # Only mount these in development
+            - ${MOUNT_SOURCES:-./:/app} # Set MOUNT_SOURCES to empty in production
+            - ${MOUNT_BUNDLE:-bundle:/usr/local/bundle} # Set MOUNT_BUNDLE to empty in production
+        command: >
+            sh -c "
+            bin/rails db:migrate &&
+            bin/rails db:seed && 
+            rm -f tmp/pids/server.pid &&
+            bundle exec rails server -b 0.0.0.0"
+        tty: true
+        stdin_open: true
+
+    sidekiq:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: ${DOCKER_TARGET:-development}
+        environment:
+            - RAILS_ENV=${RAILS_ENV:-development}
+            - POSTGRES_HOST=db
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+            - POSTGRES_DB=${POSTGRES_DB:-app_development}
+            - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-app_development}
+            - REDIS_URL=redis://redis:6379/0
+            - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+        command: bundle exec sidekiq
+        volumes:
+            - ${MOUNT_SOURCES:-./:/app}
+            - ${MOUNT_BUNDLE:-bundle:/usr/local/bundle}
+        depends_on:
+            - web
+            - redis
+            - db
+
+    css:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: ${DOCKER_TARGET:-development}
+        volumes:
+            - ${MOUNT_SOURCES:-./:/app}
+            - ${MOUNT_BUNDLE:-bundle:/usr/local/bundle}
+        command: ./bin/rails tailwindcss:watch
+        depends_on:
+            - web
+        tty: true
+        stdin_open: true
+        entrypoint: ["./bin/docker-entrypoint"]
+
+volumes:
+    postgres_data:
+    bundle:
+    redis_data:
