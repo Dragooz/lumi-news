@@ -3,7 +3,6 @@ class Api::V1::ArticlesController < ApplicationController
   def index
     @articles = Article.latest
     @articles = @articles.by_language(params[:language]) if params[:language].present?
-    
     render json: @articles.includes(:publisher).map { |article|
       {
         id: article.id,

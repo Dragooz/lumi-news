@@ -36,3 +36,13 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Add this line if it's not already there
+.env
+*.pem
+
+# Prettier
+node_modules
+package.json
+package-lock.json
+.prettierrc.yml

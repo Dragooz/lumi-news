@@ -5,8 +5,8 @@ class Publisher < ApplicationRecord
     validates :language, presence: true, inclusion: { in: %w[en ms] }
 
     PUBLISHER_CONFIGS = {
-        'SAYS' => { language: 'en', feed_url: 'https://says.com/my/rss' },
-        'Utusan' => { language: 'ms', feed_url: 'https://utusan.com.my/feed' },
-        'Berita Harian' => { language: 'ms', feed_url: 'https://www.bharian.com.my/feed' }
+        "SAYS" => { language: "en", feed_url: "https://says.com/my/rss" },
+        "Utusan" => { language: "ms", feed_url: "https://utusan.com.my/feed" },
+        "Berita Harian" => { language: "ms", feed_url: "https://www.bharian.com.my/feed" }
     }
 end
