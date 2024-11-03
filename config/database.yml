@@ -5,10 +5,11 @@ default: &default
   host: <%= ENV.fetch("POSTGRES_HOST") { "db" } %>
   username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
   password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+  database: <%= ENV.fetch("POSTGRES_DB") %>
 
 development:
   <<: *default
-  database: <%= ENV.fetch("POSTGRES_DB") { "app_development" } %>
+  database: app_development
 
 test:
   <<: *default
@@ -16,4 +17,4 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  database: app_production

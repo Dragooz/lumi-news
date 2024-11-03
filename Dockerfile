@@ -52,9 +52,6 @@ RUN bundle config set --local without 'development test' && \
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN SECRET_KEY_BASE=dummy RAILS_ENV=production bundle exec rake assets:precompile
-
 # Update crontab with Whenever jobs
 RUN whenever --update-crontab
 
