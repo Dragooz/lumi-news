@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   require "sidekiq/web"  # Add this line to require Sidekiq Web
   mount Sidekiq::Web => "/sidekiq"
-  resources :articles, only: [ :index ]
+  resources :articles, only: [ :index ] do
+    member do
+      post "summary"
+    end
+  end
   namespace :api do
     namespace :v1 do
       resources :articles, only: [ :index ]

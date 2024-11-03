@@ -1,53 +1,34 @@
-# README
+# Lumi News - Rails News Aggregator
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Ruby on Rails application that aggregates and summarizes news articles using AI (Future Feature)
 
-Things you may want to cover:
+## Prerequisites
 
-- Configuration > https://www.ivanmorgillo.com/2024/06/20/get-started-with-ruby-on-rails-on-wsl2-ubuntu/
+- Docker and Docker Compose
+- Ruby 7.2.1
+- PostgreSQL
+- Redis (for Sidekiq)
 
-- Fetch Job:
+## Development Setup
 
-1. `bin/rails db:seed`
-2. `bundle exec rails runner "FetchArticlesJob.perform_now"`
+1. Clone the repository
 
-- Ruby version
+# Docker instructions:
 
-- System dependencies
+1. Install necessary Docker in the environment
+2. Copy .env.example and rename it to .env
+3. Run "docker compose up"
+4. Run "docker exec lumi-news-web-1 bundle exec rails runner "FetchArticlesJob.perform_now" to perform the job
+5. Access the page via http://127.0.0.1:3000/
 
-- Configuration
+## Restart Docker (If due to any Postgres connecting errors)
 
-- Database creation
+1. docker compose down -v << Stop all containers and remove volumes
+2. docker compose up << Start again
 
-- Database initialization
+# TODO Left:
 
-- How to run the test suite
-
-- Services (job queues, cache servers, search engines, etc.)
-
-- Deployment instructions
-
-- Development: docker compose --env-file .env.development up
-- Production: docker compose --env-file .env.production up
-
-- Copy .env.production as .env to prod ec2
-- To restart:
-
-# Stop all containers and remove volumes
-
-docker compose down -v
-
-# Pull fresh images
-
-docker compose pull
-
-# Start up again
-
-docker compose up -d
-
-# Watch the logs
-
-docker compose logs -f
-
-- ...
+1. Research on NGINX to deploy on prod (currently EC2 can run, but not able to expose to public url yet.)
+2. Deploy cron job (now need manually trigger by `docker exec lumi-news-web-1 bundle exec rails runner "FetchArticlesJob.perform_now"`)
+3. TLDR section for each articles.
+4. Select articles > provide summarization in a whole.

@@ -39,6 +39,7 @@
 
 # Add this line if it's not already there
 .env
+!.env.example
 *.pem
 
 # Prettier
